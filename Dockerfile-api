@@ -1,0 +1,20 @@
+FROM python:3.9-alpine as compile
+RUN apk add --update --no-cache --virtual .tmp gcc libc-dev linux-headers jpeg-dev zlib-dev libjpeg python3-dev
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+WORKDIR /app
+COPY . .
+RUN pip install -r deployment/requirements.txt
+RUN pip install uwsgi
+RUN apk del .tmp
+
+
+FROM python:3.9-alpine as runtime
+COPY --from=compile /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+WORKDIR /app
+COPY . .
+
+EXPOSE 8000
+
+CMD ["sh", "entrypoint.sh"]
