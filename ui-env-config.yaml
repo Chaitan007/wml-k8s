@@ -1,0 +1,7 @@
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: ui-env-configmap 
+data:
+  COOKIE_SECURE: "true"
+  NEXT_PUBLIC_BASE_URL: https://api.chaitan.live/api

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:  
+  name: ui-node-deploy
+  namespace: default 
+  labels:    
+    app: ui-node
+spec:  
+  replicas: 1  
+  selector:    
+    matchLabels:
+      app: ui-node
+  template:
+    metadata:
+      labels:
+        app: ui-node
+    spec: 
+     containers:
+      - name: ui-node
+        image: registry.digitalocean.com/wml-cr/nextjs-docker:latest
+        envFrom:
+          - configMapRef:
+              name: ui-env-configmap
+        # env:
+        #   - name: ENV-PROD
+        #     valueFrom:
+        #       configMapKeyRef:
+        #         name: ui-env-configmap
+        #         key: NEXT_PUBLIC_BASE_URL
+        # resources:
+        #   requests:
+        #     memory: "64Mi"
+        #     cpu: "100m"
+        #   limits:
+        #     memory: "128Mi"
+        #     cpu: "150m"
+        ports:
+        - containerPort: 3000
+    #     volumeMounts:
+    #     - name: ui-env-configmap-vol
+    #       mountPath: /
+    #        subPath: .env.production
+    #       readOnly: true
+    #  volumes:
+    #  - name: ui-env-configmap-vol
+    #    configMap:
+    #      name: ui-env-configmap
